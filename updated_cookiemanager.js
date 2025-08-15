@@ -1,7 +1,6 @@
 window.dataLayer = window.dataLayer || [];
 function gtag() { dataLayer.push(arguments); }
 
-// Helper function to read a cookie by name
 function getUKParliamentCookie(name) {
     const nameEQ = name + "=";
     const ca = document.cookie.split(';');
@@ -13,7 +12,6 @@ function getUKParliamentCookie(name) {
     return null;
 }
 
-// Set default consent states, which will be updated if a cookie is found
 let analyticsConsent = 'denied';
 let adConsent = 'denied';
 
@@ -22,23 +20,17 @@ const policyCookieValue = getUKParliamentCookie(cookieName);
 
 if (policyCookieValue) {
     try {
-        // The cookie value is Base64 encoded, so we need to decode it.
-        // atob() is a standard browser function for Base64 decoding.
         const decodedCookie = atob(policyCookieValue);
         const cookieData = JSON.parse(decodedCookie);
-
-        // If the user has explicitly set their preferences, use them
         if (cookieData && cookieData.preferences_set) {
             analyticsConsent = cookieData.analytics ? 'granted' : 'denied';
             adConsent = cookieData.marketing ? 'granted' : 'denied';
         }
     } catch (e) {
         console.error('Error parsing cookie policy:', e);
-        // If the cookie is malformed, we will proceed with the 'denied' default.
     }
 }
 
-// Now, send the default command with the correct, dynamic values
 gtag('consent', 'default', {
     'analytics_storage': analyticsConsent,
     'ad_storage': adConsent,
